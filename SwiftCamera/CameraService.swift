@@ -13,9 +13,9 @@ import UIKit
 
 //  MARK: Class Camera Service, handles setup of AVFoundation needed for a basic camera app.
 public struct Photo: Identifiable, Equatable {
-//    The ID of the captured photo
+    // The ID of the captured photo
     public var id: String
-//    Data representation of the captured photo
+    // Data representation of the captured photo
     public var originalData: Data
     
     public init(id: String = UUID().uuidString, originalData: Data) {
@@ -63,36 +63,25 @@ public class CameraService {
     
 //    MARK: Observed Properties UI must react to
     
-//    1.
     @Published public var flashMode: AVCaptureDevice.FlashMode = .off
-//    2.
     @Published public var shouldShowAlertView = false
-//    3.
     @Published public var shouldShowSpinner = false
-//    4.
     @Published public var willCapturePhoto = false
-//    5.
     @Published public var isCameraButtonDisabled = true
-//    6.
     @Published public var isCameraUnavailable = true
-//    8.
     @Published public var photo: Photo?
     
 
-//    MARK: Alert properties
+    // MARK: Alert properties
     public var alertError: AlertError = AlertError()
     
-// MARK: Session Management Properties
+    // MARK: Session Management Properties
     
-//    9
     public let session = AVCaptureSession()
-//    10
     var isSessionRunning = false
-//    12
     var isConfigured = false
-//    13
     var setupResult: SessionSetupResult = .success
-//    14
+
     // Communicate with the session and other session objects on this queue.
     private let sessionQueue = DispatchQueue(label: "session queue")
     
@@ -128,7 +117,7 @@ public class CameraService {
         }
     }
     
-    //        MARK: Checks for user's permisions
+    // MARK: Checks for user's permisions
     public func checkForPermissions() {
       
         switch AVCaptureDevice.authorizationStatus(for: .video) {

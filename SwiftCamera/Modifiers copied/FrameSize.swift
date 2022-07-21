@@ -9,13 +9,13 @@
 import SwiftUI
 
 extension View {
-    func frameSize() -> some View {
-        modifier(FrameSize())
+    func frameSize(color: Color = .blue) -> some View {
+        modifier(FrameSize(color: color))
     }
 }
 
 private struct FrameSize: ViewModifier {
-    static let color: Color = .blue
+    var color: Color = .blue
 
     func body(content: Content) -> some View {
         content
@@ -33,10 +33,10 @@ private struct FrameSize: ViewModifier {
                 .strokeBorder(
                     style: StrokeStyle(lineWidth: 1, dash: [5])
                 )
-                .foregroundColor(FrameSize.color)
+                .foregroundColor(color)
             Text("\(Int(geometry.size.width))x\(Int(geometry.size.height))")
                 .font(.caption2)
-                .foregroundColor(FrameSize.color)
+                .foregroundColor(color)
                 .padding(2)
         }
     }
