@@ -83,14 +83,24 @@ struct CameraView: View {
         Button(action: {
             model.capturePhoto()
         }, label: {
-            Circle()
-                .foregroundColor(.white)
-                .frame(width: 80, height: 80, alignment: .center)
-                .overlay(
-                    Circle()
-                        .stroke(Color.black.opacity(0.8), lineWidth: 2)
-                        .frame(width: 65, height: 65, alignment: .center)
-                )
+            ZStack {
+                RoundedRectangle(cornerRadius: 34)
+                    .stroke(Color.white, style: StrokeStyle(lineWidth: 2))
+                    .frame(maxWidth: 242)
+                    .frame(height: 54)
+                HStack {
+                    Image("camera-shutter-button")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 40, height: 40)
+                    Text("8155")
+                    Text("Oak Ave.")
+                }
+                .customFont(AppFonts.primaryHeadline, category: .large)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.leading, 6)
+                .foregroundColor(Color.white)
+            }
         })
     }
     
@@ -130,7 +140,7 @@ struct CameraView: View {
             ZStack {
                 Color.black.edgesIgnoringSafeArea(.all)
                 
-                VStack {
+                ZStack {
                     Button(action: {
                         model.switchFlash()
                     }, label: {
@@ -185,8 +195,9 @@ struct CameraView: View {
                     }
                     .padding(.horizontal, 20)
                     .frameSize()
-                    // .frameSize()
+                    .frame(maxHeight: .infinity, alignment: .bottom)
                 }
+                // .ignoresSafeArea()
             }
         }
     }

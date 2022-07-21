@@ -23,7 +23,7 @@ struct CameraPreview: UIViewRepresentable {
     
     func makeUIView(context: Context) -> VideoPreviewView {
         let view = VideoPreviewView()
-        view.backgroundColor = .gray
+        view.backgroundColor = .darkGray
         view.videoPreviewLayer.cornerRadius = 0
         view.videoPreviewLayer.videoGravity = .resizeAspectFill
         view.videoPreviewLayer.session = session
