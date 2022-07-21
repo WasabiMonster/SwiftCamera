@@ -41,11 +41,6 @@ final class CameraViewModel: ObservableObject {
         }
         .store(in: &self.subscriptions)
         
-        service.$flashMode.sink { [weak self] (mode) in
-            self?.isFlashOn = mode == .on
-        }
-        .store(in: &self.subscriptions)
-        
         service.$willCapturePhoto.sink { [weak self] (val) in
             self?.willCapturePhoto = val
         }
@@ -67,9 +62,5 @@ final class CameraViewModel: ObservableObject {
     
     func zoom(with factor: CGFloat) {
         service.set(zoom: factor)
-    }
-    
-    func switchFlash() {
-        service.flashMode = service.flashMode == .on ? .off : .on
     }
 }

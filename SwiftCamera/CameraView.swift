@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct CameraView: View {
-    @StateObject var model = CameraViewModel()
+    @StateObject var viewModel = CameraViewModel()
     
     @State var currentZoomFactor: CGFloat = 1.0
     
-    var captureButton: some View {
+    var captureButtons: some View {
         Button(action: {
-            model.capturePhoto()
+            viewModel.capturePhoto()
         }, label: {
             ZStack {
                 RoundedRectangle(cornerRadius: 34)
@@ -39,8 +39,8 @@ struct CameraView: View {
     
     var capturedPhotoThumbnail: some View {
         Group {
-            if model.photo != nil {
-                Image(uiImage: model.photo.image!)
+            if viewModel.photo != nil {
+                Image(uiImage: viewModel.photo.image!)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(width: 60, height: 60)
@@ -56,50 +56,57 @@ struct CameraView: View {
     }
     
     var body: some View {
-        ZStack {
+        ZStack(alignment: .topLeading) {
             Color.black.edgesIgnoringSafeArea(.all)
             
-            ZStack {
-                Button(action: {
-                    model.switchFlash()
-                }, label: {
-                    Image(systemName: model.isFlashOn ? "bolt.fill" : "bolt.slash.fill")
-                        .font(.system(size: 20, weight: .medium, design: .default))
+            CameraPreview(session: viewModel.session)
+                .onAppear { viewModel.configure() }
+                .alert(isPresented: $viewModel.showAlertError, content: {
+                    Alert(title: Text(viewModel.alertError.title),
+                          message: Text(viewModel.alertError.message),
+                          dismissButton: .default(Text(viewModel.alertError.primaryButtonTitle),
+                                                  action: {
+                        viewModel.alertError.primaryAction?()
+                    }))
                 })
-                .accentColor(model.isFlashOn ? .yellow : .white)
-                
-                CameraPreview(session: model.session)
-                    .onAppear {
-                        model.configure()
+                .overlay(
+                    Group {
+                        if viewModel.willCapturePhoto { Color.white.opacity(0.75) }
                     }
-                    .alert(isPresented: $model.showAlertError, content: {
-                        Alert(title: Text(model.alertError.title), message: Text(model.alertError.message), dismissButton: .default(Text(model.alertError.primaryButtonTitle), action: {
-                            model.alertError.primaryAction?()
-                        }))
-                    })
-                    .overlay(
-                        Group {
-                            if model.willCapturePhoto {
-                                Color.green
-                            }
-                        }
-                    )
-                    .animation(.easeInOut)
-                    .background(Color.gray)
-                    .frameSize(color: Color.green)
+                )
+                .animation(.easeInOut)
+                .background(Color.gray)
+     
+            VStack {
+                LinearGradient(gradient: Gradient(colors: [.black, .clear]), startPoint: .top, endPoint: .bottom)
+                    .frame(maxHeight: 232)
+                
+                Spacer()
+                
+                ZStack(alignment: .bottom) {
+                    LinearGradient(gradient: Gradient(colors: [.clear, .black]), startPoint: .top, endPoint: .bottom)
+                        .frame(maxHeight: 160, alignment: .bottom)
 
-                capturedPhotoThumbnail
-                    .frameSize()
+                    Image("camera-viewfinder")
+                        .shadow(color: Color.black.opacity(0.4), radius: 1, x: 0, y: 0)
+                        .padding(.bottom, 178)
+                }
+            }
+
+            
+            capturedPhotoThumbnail
+                .frame(alignment: .leading)
+            
+            VStack(spacing: 0) {
+                Spacer()
                 
                 ScrollView(.horizontal, showsIndicators: false) {
-                    captureButton
-                        .frame(maxHeight: 62, alignment: .bottom)
+                    captureButtons
+                        .frameSize()
                 }
-                .padding(.horizontal, 20)
-                .frameSize()
-                .frame(maxHeight: 62, alignment: .bottom)
+                .padding(.bottom, 42)
             }
-            .ignoresSafeArea()
+            .frame(maxHeight: .infinity)
         }
     }
 }

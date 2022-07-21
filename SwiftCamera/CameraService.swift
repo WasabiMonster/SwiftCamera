@@ -410,10 +410,7 @@ public class CameraService {
                     photoSettings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.hevc])
                 }
                 
-                // Sets the flash option for this capture.
-                if self.videoDeviceInput.device.isFlashAvailable {
-                    photoSettings.flashMode = self.flashMode
-                }
+                photoSettings.flashMode = .off
                 
                 photoSettings.isHighResolutionPhotoEnabled = true
                 
