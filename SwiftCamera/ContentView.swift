@@ -168,26 +168,24 @@ struct CameraView: View {
                         .overlay(
                             Group {
                                 if model.willCapturePhoto {
-                                    Color.black
+                                    Color.green
                                 }
                             }
                         )
                         .animation(.easeInOut)
-                    
+                        .background(Color.darkRed)
+                        .frameSize()
                     
                     HStack {
                         capturedPhotoThumbnail
-                        
                         Spacer()
-                        
                         captureButton
-                        
                         Spacer()
-                        
                         flipCameraButton
-                        
                     }
                     .padding(.horizontal, 20)
+                    .frameSize()
+                    // .frameSize()
                 }
             }
         }

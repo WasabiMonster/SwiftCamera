@@ -4,6 +4,7 @@
 //
 //  Created by Rolando Rodriguez on 10/15/20.
 //
+// https://github.com/rorodriguez116/SwiftCamera
 
 import SwiftUI
 
