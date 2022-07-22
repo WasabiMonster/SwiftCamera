@@ -16,8 +16,6 @@ final class CameraViewModel: ObservableObject {
     
     @Published var showAlertError = false
     
-    @Published var isFlashOn = false
-    
     @Published var willCapturePhoto = false
     
     var alertError: AlertError!

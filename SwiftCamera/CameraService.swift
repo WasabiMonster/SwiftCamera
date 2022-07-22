@@ -11,7 +11,7 @@ import AVFoundation
 import Photos
 import UIKit
 
-//  MARK: Class Camera Service, handles setup of AVFoundation needed for a basic camera app.
+///  MARK: Class Camera Service, handles setup of AVFoundation needed for a basic camera app.
 public struct Photo: Identifiable, Equatable {
     // The ID of the captured photo
     public var id: String
@@ -61,8 +61,7 @@ extension Photo {
 public class CameraService {
     typealias PhotoCaptureSessionID = String
     
-//    MARK: Observed Properties UI must react to
-    
+    /// MARK: Observed Properties UI must react to
     @Published public var flashMode: AVCaptureDevice.FlashMode = .off
     @Published public var shouldShowAlertView = false
     @Published public var shouldShowSpinner = false
@@ -72,32 +71,29 @@ public class CameraService {
     @Published public var photo: Photo?
     
 
-    // MARK: Alert properties
+    /// MARK: Alert properties
     public var alertError: AlertError = AlertError()
     
-    // MARK: Session Management Properties
-    
+    /// MARK: Session Management Properties
     public let session = AVCaptureSession()
     var isSessionRunning = false
     var isConfigured = false
     var setupResult: SessionSetupResult = .success
 
-    // Communicate with the session and other session objects on this queue.
+    /// Communicate with the session and other session objects on this queue.
     private let sessionQueue = DispatchQueue(label: "session queue")
     
     @objc dynamic var videoDeviceInput: AVCaptureDeviceInput!
     
-    // MARK: Device Configuration Properties
+    /// MARK: Device Configuration Properties
     private let videoDeviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera, .builtInDualCamera, .builtInTrueDepthCamera], mediaType: .video, position: .unspecified)
     
-    // MARK: Capturing Photos
-    
+    /// MARK: Capturing Photos
     private let photoOutput = AVCapturePhotoOutput()
     
     private var inProgressPhotoCaptureDelegates = [Int64: PhotoCaptureProcessor]()
     
-    // MARK: KVO and Notifications Properties
-    
+    /// MARK: KVO and Notifications Properties
     private var keyValueObservations = [NSKeyValueObservation]()
     
     
@@ -117,12 +113,12 @@ public class CameraService {
         }
     }
     
-    // MARK: Checks for user's permisions
+    /// MARK: Checks for User's permisions
     public func checkForPermissions() {
       
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized:
-            // The user has previously granted access to the camera.
+            /// The user has previously granted access to the camera.
             break
         case .notDetermined:
             /*
@@ -139,7 +135,7 @@ public class CameraService {
             })
             
         default:
-            // The user has previously denied access.
+            /// The user has previously denied access.
             setupResult = .notAuthorized
             
             DispatchQueue.main.async {
@@ -155,9 +151,9 @@ public class CameraService {
         }
     }
     
-    //  MARK: Session Management
+    /// MARK: Session Management
     
-    // Call this on the session queue.
+    /// Call this on the session queue.
     /// - Tag: ConfigureSession
     private func configureSession() {
         if setupResult != .success {
@@ -168,12 +164,12 @@ public class CameraService {
         
         session.sessionPreset = .photo
         
-        // Add video input.
+        /// Add video input.
         do {
             var defaultVideoDevice: AVCaptureDevice?
             
-            if let backCameraDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) {
-                // If a rear dual camera is not available, default to the rear wide angle camera.
+            if let backCameraDevice = AVCaptureDevice.default(.builtInUltraWideCamera, for: .video, position: .back) {
+                // If a rear dual camera is not available, default to the rear ultra wide angle camera.
                 defaultVideoDevice = backCameraDevice
             } else if let frontCameraDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front) {
                 // If the rear wide angle camera isn't available, default to the front wide angle camera.
